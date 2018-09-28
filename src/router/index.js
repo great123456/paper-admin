@@ -28,7 +28,7 @@ export default new Router({
                 {
                     path: '/fee',
                     component: resolve => require(['../pages/fee.vue'], resolve),
-                    meta: { title: '降重收费' }
+                    meta: { title: '用户管理' }
                 },
                 {
                     path: '/editor',
@@ -51,13 +51,18 @@ export default new Router({
                     // 人工查重
                     path: '/check',
                     component: resolve => require(['../pages/check.vue'], resolve),
-                    meta: { title: '人工查重' }
+                    meta: { title: '降重管理' }
                 },
                 {
                     //检测类型
                     path: '/type',
                     component: resolve => require(['../pages/type.vue'], resolve),
-                    meta: { title: '检测类型' }
+                    meta: { title: '价格设置' }
+                },{
+                    //论文监测
+                    path: '/submit',
+                    component: resolve => require(['../pages/submit.vue'], resolve),
+                    meta: { title: '论文监测' }
                 }
             ]
         },

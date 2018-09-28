@@ -1,19 +1,20 @@
-<!-- 人工降重收费 -->
+<!-- 用户管理 -->
 <template>
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-tickets"></i>人工降重收费设置</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-tickets"></i>用户管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-              <el-button type="primary" plain @click="addSchool">添加类别</el-button>
+              <!-- <el-button type="primary" plain @click="addSchool">添加类别</el-button> -->
             </div>
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
                 <el-table-column prop="created_at" label="创建时间"></el-table-column>
-                <el-table-column prop="name" label="降重类型"></el-table-column>
-                <el-table-column prop="content" label="价格"></el-table-column>
+                <el-table-column prop="name" label="用户名"></el-table-column>
+                <el-table-column prop="content" label="邮箱"></el-table-column>
+                <el-table-column prop="content" label="账号余额"></el-table-column>
                 <el-table-column label="操作">
                    <template slot-scope="scope">
                       <el-button

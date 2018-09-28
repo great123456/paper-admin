@@ -3,7 +3,7 @@
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-tickets"></i>检测类型</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-tickets"></i>价格设置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -22,7 +22,7 @@
                 <el-table-column prop="type" label="检测类型" sortable></el-table-column>
                 <el-table-column prop="name" label="原价"></el-table-column>
                 <el-table-column prop="price" label="现价"></el-table-column>
-                
+                <el-table-column prop="price" label="加价方式"></el-table-column>
                 <el-table-column label="操作">
                    <template slot-scope="scope">
                       <el-button
@@ -48,6 +48,15 @@
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="价格">
                     <el-input v-model="form.price"></el-input>
+                </el-form-item>
+                <el-form-item label="百分比">
+                    <el-input-number v-model="form.num" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
+                </el-form-item>
+                <el-form-item label="特殊资源">
+                    <el-radio-group v-model="form.type">
+                      <el-radio label="1" value="1">直接设置价格</el-radio>
+                      <el-radio label="2" value="2">百分比</el-radio>
+                    </el-radio-group>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -81,7 +90,9 @@
                 updateDialog: false,
                 form: {
                     name: '',
-                    price: ''
+                    price: '',
+                    num: 10,
+                    type: '1'
                 },
                 deleteId: '',
                 updateId: ''
@@ -102,6 +113,9 @@
             handleCurrentChange(val) {
                 this.cur_page = val;
                 this.getData();
+            },
+            handleChange(){
+
             },
             handleRemoveMain(file, fileList) {
                 this.fileList = fileList

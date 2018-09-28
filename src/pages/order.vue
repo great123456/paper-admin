@@ -8,25 +8,42 @@
         </div>
         <div class="container">
             <div class="handle-box">
-              <!-- <el-select v-model="typeId" placeholder="请选择订单类型" @change="selectType">
+              <el-select v-model="typeId" placeholder="请选择订单类型" @change="selectType">
                   <el-option
                     v-for="item in typeList"
                     :key="item.id"
                     :label="item.label"
                     :value="item.id">
                   </el-option>
-              </el-select> -->
+              </el-select>
+              <div style="margin-top: 20px;"></div>
+              <el-input v-model="orderNo" placeholder="请输入订单号" style="width:200px;"></el-input>
+              <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+               </el-date-picker>
+               <el-select v-model="checkId" placeholder="请选择监测类型" @change="selectType">
+                  <el-option
+                    v-for="item in checkList"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.id">
+                  </el-option>
+              </el-select>
+              <el-button type="primary" plain>搜索</el-button>
             </div>
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
                 <el-table-column prop="created_at" label="订单日期" sortable width="200"></el-table-column>
-                <el-table-column prop="name" label="用户名" width="120"></el-table-column>
-                <el-table-column prop="room_no" label="检测类型" width="120"></el-table-column>
-                <el-table-column prop="order_no" label="论文作者" width="200"></el-table-column>
-                <el-table-column prop="total" label="论文标题" width="120"></el-table-column>
-                <el-table-column prop="productName" label="论文价格" width="200"></el-table-column>
-                <el-table-column prop="productPrice" label="订单金额" width="200"></el-table-column>
-                <el-table-column prop="productPrice" label="订单编号" width="200"></el-table-column>
-                <el-table-column prop="remark" label="论文内容" width="200"></el-table-column>
+                <el-table-column prop="name" label="用户名"></el-table-column>
+                <el-table-column prop="room_no" label="检测类型"></el-table-column>
+                <el-table-column prop="order_no" label="订单编号"></el-table-column>
+                <el-table-column prop="total" label="字数"></el-table-column>
+                <el-table-column prop="productName" label="实际收入"></el-table-column>
+                <el-table-column prop="productPrice" label="成本"></el-table-column>
+                <el-table-column prop="productPrice" label="状态"></el-table-column>
             </el-table>
             <div class="pagination">
                 <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" layout="prev, pager, next" :total="total">
@@ -43,12 +60,22 @@
         data() {
             return {
                 typeList: [{
-                    label: '美食订单',
+                    label: '用户订单',
                     id: 1
                 },{
-                    label: '服务订单',
+                    label: '后台订单',
                     id: 2
                 }],
+                checkList: [{
+                    label: '万方',
+                    id: 1
+                },{
+                    label: '知网',
+                    id: 2
+                }],
+                checkId: 1,
+                date: '',
+                orderNo: '',
                 typeId: 1,
                 tableData: [],
                 cur_page: 1,

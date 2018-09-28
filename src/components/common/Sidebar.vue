@@ -43,7 +43,7 @@
                     {
                         icon: 'el-icon-bell',
                         index: 'check',
-                        title: '人工降重'
+                        title: '降重管理'
                     },
                     {
                         icon: 'el-icon-bell',
@@ -53,12 +53,16 @@
                     {
                         icon: 'el-icon-menu',
                         index: 'type',
-                        title: '检测类型'
+                        title: '价格设置'
                     },
                     {
                         icon: 'el-icon-setting',
                         index: 'fee',
-                        title: '降重收费'
+                        title: '用户管理'
+                    },{
+                        icon: 'el-icon-setting',
+                        index: 'submit',
+                        title: '论文监测'
                     }
                 ]
             }
