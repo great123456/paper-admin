@@ -37,6 +37,9 @@
                 <el-form-item label="新密码">
                     <el-input v-model="form.password"></el-input>
                 </el-form-item>
+                <el-form-item label="确认密码">
+                    <el-input v-model="form.password"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="updateDialog = false">取 消</el-button>

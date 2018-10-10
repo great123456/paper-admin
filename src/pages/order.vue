@@ -3,7 +3,7 @@
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-tickets"></i>论文检测订单列表</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-tickets"></i>订单列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -67,6 +67,9 @@
                     id: 2
                 }],
                 checkList: [{
+                   label: '全部',
+                   id: '' 
+                },{
                     label: '万方',
                     id: 1
                 },{

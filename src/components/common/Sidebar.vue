@@ -32,13 +32,18 @@
                 items: [
                     {
                         icon: 'el-icon-menu',
-                        index: 'order',
-                        title: '检测订单'
+                        index: 'type',
+                        title: '价格设置'
                     },
                     {
-                        icon: 'el-icon-goods',
-                        index: 'account',
-                        title: '账号管理'
+                        icon: 'el-icon-menu',
+                        index: 'order',
+                        title: '订单列表'
+                    },
+                    {
+                        icon: 'el-icon-setting',
+                        index: 'submit',
+                        title: '手工提交'
                     },
                     {
                         icon: 'el-icon-bell',
@@ -51,18 +56,14 @@
                         title: '充值订单'
                     },
                     {
-                        icon: 'el-icon-menu',
-                        index: 'type',
-                        title: '价格设置'
-                    },
-                    {
                         icon: 'el-icon-setting',
                         index: 'fee',
                         title: '用户管理'
-                    },{
-                        icon: 'el-icon-setting',
-                        index: 'submit',
-                        title: '论文监测'
+                    },
+                    {
+                        icon: 'el-icon-goods',
+                        index: 'account',
+                        title: '账号管理'
                     }
                 ]
             }
