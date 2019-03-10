@@ -8,7 +8,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-              <el-button type="primary" plain @click="addSchool">添加账号</el-button>
+              <el-button type="primary" plain @click="addAccount">添加账号</el-button>
             </div>
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
                 <el-table-column prop="name" label="创建时间"></el-table-column>
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <!-- 添加菜谱 -->
+        <!-- 添加账号 -->
         <el-dialog title="添加账号" :visible.sync="editVisible" width="500px">
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="账号名称">
@@ -42,12 +42,12 @@
             </el-form>
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="账号密码">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.password"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="saveAccount">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -73,23 +73,19 @@
 </template>
 
 <script>
-    import { apiAddCookbook,apiCookbookList,apiCookbookDelete,apiCookbookSave } from '@/service'
+    import { apiAddAccount } from '@/service'
     export default {
         data() {
             return {
-                fileList: [],
                 tableData: [],
                 cur_page: 1,
                 pageSize: 10,
                 total: 0,
-                select_cate: '',
-                select_word: '',
-                is_search: false,
                 editVisible: false,
                 dialogUpdate: false,
                 form: {
-                    name: '',
-                    address: ''
+                  name: '',
+                  password: ''
                 },
                 deleteId: '',
                 updateId: ''
@@ -98,64 +94,30 @@
         created() {
            this.getData();
         },
-        computed: {
-            token(){
-             return {
-               Authorization: `bearer ${localStorage.getItem('admin-token')}`
-             }
-           }
-        },
         methods: {
             // 分页导航
             handleCurrentChange(val) {
                 this.cur_page = val;
                 this.getData();
             },
-            handleRemoveMain(file, fileList) {
-                this.fileList = fileList
-            },
-            handleChangeMain(file, fileList){
-              this.fileList = fileList
-            },
-            checkImage(url){
-              window.open(url)
-            },
             getData() {
-                apiCookbookList({
-                  page: this.cur_page
-                })
-                .then((res) => {
-                    this.tableData = res.data.list
-                    this.total = res.data.total
-                })
+              
             },
-            addSchool(){
+            addAccount(){
               this.editVisible = true
               this.form.name = ''
-              this.fileList = []
+              this.form.password = ''
             },
-            // 添加菜谱
-            saveEdit() {
-              if(this.form.name == ''){
-                this.$message.error('菜谱名称不能为空')
-                return
-              }
-              if(this.fileList.length == 0){
-                this.$message.error('菜谱图标未上传')
-                return
-              }
-              apiAddCookbook({
+            // 添加账号
+            saveAccount() {
+              apiAddAccount({
                 name: this.form.name,
-                img: this.fileList[0].response.data.url,
-                sort: 1
+                password: this.form.password
               })
-              .then((res)=>{
+              .then((res) => {
                 if(res.code == 200){
-                  this.editVisible = false
                   this.$message.success('添加成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
+                  this.editVisible = false
                 }
               })
             },
@@ -166,58 +128,14 @@
               this.fileList = []
             },
             updateCookBook(){
-               if(this.form.name == ''){
-                 this.$message.error('菜谱名称不能为空')
-                 return
-               }
-               if(this.fileList.length == 0){
-                 this.$message.error('菜谱图标未上传')
-                 return
-               }
-               apiCookbookSave({
-                 id: this.updateId,
-                 name: this.form.name,
-                 img: this.fileList[0].response.data.url,
-                 sort: 1
-               })
-               .then((res)=>{
-                  if(res.code == 200){
-                    this.dialogUpdate = false
-                    this.$message.success('修改成功')
-                    this.getData()
-                  }else{
-                    this.$message.error(res.message)
-                  }
-               })
+               
             },
             handleDelete(row){
-              this.deleteId = row.id
-              this.$confirm('确定删除当前菜谱?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                      }).then(() => {
-                        this.deleteRow()
-                      }).catch(() => {
-                        this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                        });          
-                      })
+              
             },
             // 确定删除
             deleteRow(){
-              apiCookbookDelete({
-                id: this.deleteId
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.$message.success('删除成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             }
         }
     }

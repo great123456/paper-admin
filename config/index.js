@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api':{
-          target:'https://hotelapi.hxgtech.com/api',
+      '/admin':{
+          target:'http://47.102.117.36/admin',
           changeOrigin:true,
           pathRewrite:{
-              '/api':''
+              '/admin':''
           }
       },
       '/ms':{

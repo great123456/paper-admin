@@ -13,6 +13,7 @@
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
                 <el-table-column prop="created_at" label="创建时间"></el-table-column>
                 <el-table-column prop="name" label="用户名"></el-table-column>
+                <el-table-column prop="type" label="账号类型"></el-table-column>
                 <el-table-column prop="content" label="邮箱"></el-table-column>
                 <el-table-column prop="content" label="账号余额"></el-table-column>
                 <el-table-column label="操作">
@@ -70,7 +71,7 @@
 </template>
 
 <script>
-    import { apiIndexListAdd,apiIndexList,apiIndexListDelete } from '@/service/index'
+    import {  } from '@/service/index'
     export default {
         data() {
             return {
@@ -119,30 +120,13 @@
               window.open(url)
             },
             getData() {
-                const self = this
-                apiIndexList()
-                .then((res) => {
-                    self.tableData = res.data.list
-                    self.total = res.data.total
-                })
+              
             },
             handleEdit(){
               
             },
             handleDelete(row){
-              this.deleteId = row.id
-              this.$confirm('确定删除当前图文?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                      }).then(() => {
-                        this.deleteRow()
-                      }).catch(() => {
-                        this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                        });          
-                      })
+              
             },
             addSchool(){
               this.editVisible = true
@@ -155,36 +139,11 @@
             },
             // 保存图文
             saveEdit() {
-              apiIndexListAdd({
-                name: this.form.name,
-                type: 1,
-                img: this.fileList[0].response.data.url,
-                sort: 1,
-                content: this.form.link
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.editVisible = false
-                  this.$message.success('添加成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             },
             // 确定删除
             deleteRow(){
-              apiIndexListDelete({
-                id: this.deleteId
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.$message.success('删除成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             }
         }
     }

@@ -84,13 +84,11 @@
                 cur_page: 1,
                 pageSize: 10,
                 total: 0,
-                select_cate: '',
-                select_word: '',
-                is_search: false
+                select_cate: ''
             }
         },
         created() {
-            this.getData();
+          this.getData();
         },
         computed: {
 
@@ -102,27 +100,21 @@
                 this.getData();
             },
             getData() {
-                apiOrderList({
-                    type: this.typeId,
-                    page: this.cur_page
-                })
-                .then((res) => {
-                    console.log('res-order',res.data)
-                    this.tableData = res.data.list
-                    this.tableData.forEach(function(item){
-                        item.type = item.type == 1?'美食订单':'服务订单'
-                        item.productName = item.detail[0].name
-                        item.productPrice = item.detail[0].price
-                        item.productAmount = item.detail[0].amount
-                    })
-                    this.total = res.data.total
-                })
+              apiOrderList({
+                name: '', // 用户名
+                startTime: '',
+                endTime: '',
+                orderCode: ''
+              })
+              .then((res) => {
+                console.log(res)
+              })
             },
             selectType(){
               this.getData()
             },
             search() {
-                this.is_search = true;
+              this.is_search = true;
             },
             // 保存编辑
             saveEdit() {

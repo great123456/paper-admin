@@ -42,6 +42,16 @@
             </div>
         </div>
 
+        
+        <div class="price-record">
+          <p>价格调整记录</p>
+          <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
+              <el-table-column prop="time" label="调整时间" sortable></el-table-column>
+              <el-table-column prop="name" label="原价变动"></el-table-column>
+              <el-table-column prop="price" label="后台手动调整"></el-table-column>
+              <el-table-column prop="price" label="调整账号"></el-table-column>
+          </el-table>
+        </div>
 
         <!-- 修改检测类型价格 -->
         <el-dialog title="编辑价格" :visible.sync="updateDialog" width="500px">
@@ -70,7 +80,7 @@
 </template>
 
 <script>
-  import { apiServiceList,apiServiceProList,apiServiceProListAdd,apiServiceProListDelete,apiServiceProListSave } from '@/service/index'
+  import {  } from '@/service/index'
     export default {
         data() {
             return {
@@ -127,72 +137,23 @@
               window.open(url)
             },
             getServiceList(){
-               apiServiceList()
-                .then((res) => {
-                    this.cateList = res.data.list
-                    if(this.cateList.length>0){
-                      this.cateId = this.cateList[0].id
-                      this.getData()
-                    }
-                })
+               
             },
             selectService(){
                this.getData()
             },
             getData() {
-                const self = this
-                apiServiceProList({
-                  id: this.cateId,
-                  page: this.cur_page
-                })
-                .then((res) => {
-                    self.tableData = res.data.list
-                    self.total = res.data.total
-                })
+              
             },
             search() {
                 this.is_search = true;
             },
             addSchool(){
-              if(this.cateId == ''){
-                this.$message('请先选择一个服务')
-                return
-              }
-              this.editVisible = true
-              this.form.name = ''
-              this.form.price = ''
-              this.fileList = []
+              
             },
             // 添加服务产品
             saveEdit() {
-              if(this.form.name == ''){
-                this.$message.error('产品名称不能为空')
-                return
-              }
-              if(this.form.price == ''){
-                this.$message.error('产品价格不能为空')
-                return
-              }
-              if(this.fileList.length == 0){
-                this.$message.error('产品图片未上传')
-                return
-              }
-              apiServiceProListAdd({
-                name: this.form.name,
-                img: this.fileList[0].response.data.url,
-                price: this.form.price,
-                sort: 1,
-                service_id: this.cateId
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.editVisible = false
-                  this.$message.success('添加成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             },
             handleEdit(index,row){
               this.updateDialog = true
@@ -201,64 +162,14 @@
               this.form.price = row.price
             },
             updateServiceManage(){
-              if(this.form.name == ''){
-                this.$message.error('产品名称不能为空')
-                return
-              }
-              if(this.form.price == ''){
-                this.$message.error('产品价格不能为空')
-                return
-              }
-              if(this.fileList.length == 0){
-                this.$message.error('产品图片未上传')
-                return
-              }
-              apiServiceProListSave({
-                id: this.updateId,
-                name: this.form.name,
-                img: this.fileList[0].response.data.url,
-                price: this.form.price,
-                sort: 1,
-                service_id: this.cateId
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.updateDialog = false
-                  this.$message.success('修改成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             },
             handleDelete(row){
-              this.deleteId = row.id
-              this.$confirm('确定删除当前菜谱?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                      }).then(() => {
-                        this.deleteRow()
-                      }).catch(() => {
-                        this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                        });          
-                      })
+              
             },
             // 确定删除
             deleteRow(){
-              apiServiceProListDelete({
-                id: this.deleteId
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.$message.success('删除成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             }
         }
     }
@@ -281,6 +192,13 @@
     .del-dialog-cnt{
         font-size: 16px;
         text-align: center
+    }
+    .price-record{
+      margin-top: 100px;
+    }
+    .price-record p{
+      margin-bottom: 10px;
+      color: #606266;
     }
 </style>
 <style>

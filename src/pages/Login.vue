@@ -18,7 +18,7 @@
 </template>
 
 <script>
-    import { apiUserRegister,apiUserInfo,apiUserLogin } from '@/service'
+    import { apiUserLogin } from '@/service'
     export default {
         data: function(){
             return {
@@ -45,22 +45,19 @@
                 const self = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                      self.$router.push('/order');
-                      // apiUserLogin({
-                      //   email: self.ruleForm.username,
-                      //   password: self.ruleForm.password
-                      // })
-                      // .then((res)=>{
-                      //   console.log('res',res)
-                      //   if(res.code == 200){
-                      //     self.$message.success('登录成功')
-                      //     localStorage.setItem('admin-token',res.data.token)
-                      //     localStorage.setItem('username',self.ruleForm.username);
-                      //     self.$router.push('/order');
-                      //   }else{
-                      //     self.$message.error('用户名或者密码错误')
-                      //   }
-                      // })
+                      apiUserLogin({
+                        name: self.ruleForm.username,
+                        password: self.ruleForm.password
+                      })
+                      .then((res)=>{
+                        console.log('res',res)
+                        if(res.code == 200){
+                          self.$message.success('登录成功')
+                          self.$router.push('/type');
+                        }else{
+                          self.$message.error(res.message)
+                        }
+                      })
                     } else {
                         return false;
                     }

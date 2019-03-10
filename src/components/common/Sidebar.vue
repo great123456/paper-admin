@@ -45,11 +45,11 @@
                         index: 'submit',
                         title: '手工提交'
                     },
-                    {
-                        icon: 'el-icon-bell',
-                        index: 'check',
-                        title: '降重管理'
-                    },
+                    // {
+                    //     icon: 'el-icon-bell',
+                    //     index: 'check',
+                    //     title: '降重管理'
+                    // },
                     {
                         icon: 'el-icon-bell',
                         index: 'recharge',

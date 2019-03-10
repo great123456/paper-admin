@@ -112,7 +112,7 @@
 </template>
 
 <script>
-    import { apiCookbookList,apiMenuListAdd,apiMenuList,apiMenuListDelete,apiMenuListSave,apiMenuListDetail} from '@/service/index'
+    import { } from '@/service/index'
     export default {
         data() {
             return {
@@ -162,15 +162,7 @@
               this.fileList = fileList
             },
             getData() {
-                apiMenuList({
-                  id: this.cateId,
-                  page: 1
-                })
-                .then((res) => {
-                    console.log('res',res.data)
-                    this.tableData = res.data.list
-                    this.total = res.data.total
-                })
+               
             },
             // 确定删除
             handleDelete(){

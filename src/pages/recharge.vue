@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import { apiServiceList,apiServiceListAdd,apiServiceListDelete,apiServiceListSave } from '@/service/index'
+    import {  } from '@/service/index'
     export default {
         data() {
             return {
@@ -61,39 +61,14 @@
         created() {
             this.getData();
         },
-        computed: {
-           token(){
-             return {
-               Authorization: `bearer ${localStorage.getItem('admin-token')}`
-             }
-           }
-        },
         methods: {
             // 分页导航
             handleCurrentChange(val) {
                 this.cur_page = val;
                 this.getData();
             },
-           handleRemoveMain(file, fileList) {
-                this.fileList = fileList
-            },
-            handleChangeMain(file, fileList){
-              this.fileList = fileList
-            },
-            checkImage(url){
-              window.open(url)
-            },
             getData() {
-                apiServiceList({
-                  page: this.cur_page
-                })
-                .then((res) => {
-                    this.tableData = res.data.list
-                    this.total = res.data.total
-                })
-            },
-            search() {
-                this.is_search = true;
+              
             },
             addSchool(){
               this.editVisible = true
@@ -102,28 +77,7 @@
             },
             // 添加服务
             saveEdit() {
-              if(this.form.name == ''){
-                this.$message.error('产品名称不能为空')
-                return
-              }
-              if(this.fileList.length == 0){
-                this.$message.error('服务图片未上传')
-                return
-              }
-              apiServiceListAdd({
-                name: this.form.name,
-                img: this.fileList[0].response.data.url,
-                sort: 1
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.editVisible = false
-                  this.$message.success('添加成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             },
             handleEdit(index,row){
               this.updateDialog = true
@@ -131,58 +85,14 @@
               this.form.name = row.name
             },
             updateService(){
-              if(this.form.name == ''){
-                this.$message.error('产品名称不能为空')
-                return
-              }
-              if(this.fileList.length == 0){
-                this.$message.error('服务图片未上传')
-                return
-              }
-              apiServiceListSave({
-                id: this.updateId,
-                name: this.form.name,
-                img: this.fileList[0].response.data.url,
-                sort: 1
-              })
-              .then((res)=>{
-                if(res.code == 200){
-                  this.updateDialog = false
-                  this.$message.success('修改成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+              
             },
             handleDelete(row){
-              this.deleteId = row.id
-              this.$confirm('确定删除当前菜谱?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                      }).then(() => {
-                        this.deleteRow()
-                      }).catch(() => {
-                        this.$message({
-                          type: 'info',
-                          message: '已取消删除'
-                        });          
-                      })
+              
             },
             // 确定删除
             deleteRow(){
-               apiServiceListDelete({
-                 id: this.deleteId
-               })
-               .then((res)=>{
-                if(res.code == 200){
-                  this.$message.success('删除成功')
-                  this.getData()
-                }else{
-                  this.$message.error(res.message)
-                }
-              })
+               
             }
         }
     }
