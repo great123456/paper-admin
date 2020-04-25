@@ -11,16 +11,26 @@
               <el-button type="primary" plain @click="addAccount">添加账号</el-button>
             </div>
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
-                <el-table-column prop="name" label="创建时间"></el-table-column>
+                <el-table-column prop="createTime" label="创建时间"></el-table-column>
                 <el-table-column prop="name" label="账号名称"></el-table-column>
-                <el-table-column prop="name" label="账号密码"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column prop="statusValue" label="状态"></el-table-column>
+                <el-table-column label="操作" width="260">
                    <template slot-scope="scope">
                       <el-button
                          size="mini"
                          type="primary"
                          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                       <el-button
+                         size="mini"
+                         type="primary"
+                         v-show="scope.row.status == 0"
+                         @click="updateAccountStatus(scope.row)">启用</el-button>
+                      <el-button
+                        size="mini"
+                        type="danger"
+                        v-show="scope.row.status == 1"
+                        @click="updateAccountStatus(scope.row)">禁用</el-button>
+                        <el-button
                         size="mini"
                         type="danger"
                         @click="handleDelete(scope.row)">删除</el-button>
@@ -45,6 +55,11 @@
                     <el-input v-model="form.password"></el-input>
                 </el-form-item>
             </el-form>
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="备注">
+                    <el-input v-model="form.remark"></el-input>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveAccount">确 定</el-button>
@@ -57,15 +72,13 @@
                 <el-form-item label="账号名称">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-            </el-form>
-            <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="账号密码">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogUpdate = false">取 消</el-button>
-                <el-button type="primary" @click="updateCookBook">修改</el-button>
+                <el-button type="primary" @click="updateAccountInfo">修改</el-button>
             </span>
         </el-dialog>
 
@@ -73,7 +86,8 @@
 </template>
 
 <script>
-    import { apiAddAccount } from '@/service'
+    import { apiAccountList,apiAddAccount,apiUpdateAccountStatus, apiUpdateUserInfo, apiDeleteUserInfo } from '@/service'
+    import { formatTimeString } from '@/config/utils'
     export default {
         data() {
             return {
@@ -85,7 +99,8 @@
                 dialogUpdate: false,
                 form: {
                   name: '',
-                  password: ''
+                  password: '',
+                  remark: '' // 备注
                 },
                 deleteId: '',
                 updateId: ''
@@ -101,18 +116,41 @@
                 this.getData();
             },
             getData() {
-              
+              apiAccountList()
+              .then((res) => {
+                if(res.code == 200){
+                  this.tableData = res.data.list
+                  this.tableData.forEach(function(item){
+                    item.createTime = formatTimeString(item.createTime)
+                    item.statusValue = item.status == 0 ? '禁用': '启用'
+                  })
+                }
+              })
+            },
+            updateAccountStatus(row) {
+              // console.log('row',row)
+              apiUpdateAccountStatus({
+                id: row.id,
+                status: row.status == 0 ? 1: 0
+              })
+              .then((res) => {
+                if(res.code == 200){
+                  this.getData();
+                }
+              })
             },
             addAccount(){
               this.editVisible = true
               this.form.name = ''
               this.form.password = ''
+              this.form.remark = ''
             },
             // 添加账号
             saveAccount() {
               apiAddAccount({
                 name: this.form.name,
-                password: this.form.password
+                password: this.form.password,
+                remark: this.form.remark
               })
               .then((res) => {
                 if(res.code == 200){
@@ -125,17 +163,48 @@
               this.dialogUpdate = true
               this.form.name = row.name
               this.updateId = row.id
-              this.fileList = []
             },
-            updateCookBook(){
-               
+            updateAccountInfo(){
+               apiUpdateUserInfo({
+                 id: this.updateId,
+                 name: this.form.name
+               })
+               .then((res) => {
+                 if(res.code == 200){
+                   this.dialogUpdate = false
+                   this.$message.success('修改成功')
+                   this.getData();
+                 }
+               })
             },
             handleDelete(row){
-              
+              this.$confirm('确定要删除当前账号?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.deleteRow(row)
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });          
+              });
             },
             // 确定删除
-            deleteRow(){
-              
+            deleteRow(row){
+              apiDeleteUserInfo({
+                id: row.id
+              })
+              .then((res) => {
+                if(res.code == 200){
+                  this.getData()
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  });
+                }
+              })
             }
         }
     }

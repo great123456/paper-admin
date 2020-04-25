@@ -8,16 +8,29 @@
         </div>
         <div class="container">
             <div class="handle-box">
-              <!-- <el-button type="primary" plain @click="addSchool">添加类别</el-button> -->
+              <el-input v-model="name" clearable placeholder="请输入用户名" style="width:200px;"></el-input>
+              <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    value-format="timestamp"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+               </el-date-picker>
+              <el-button type="primary" plain @click="getData">搜索</el-button>
             </div>
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
-                <el-table-column prop="created_at" label="创建时间"></el-table-column>
+                <el-table-column prop="createTime" label="创建时间"></el-table-column>
                 <el-table-column prop="name" label="用户名"></el-table-column>
-                <el-table-column prop="type" label="账号类型"></el-table-column>
-                <el-table-column prop="content" label="邮箱"></el-table-column>
-                <el-table-column prop="content" label="账号余额"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column prop="typeValue" label="注册类型"></el-table-column>
+                <el-table-column prop="email" label="邮箱"></el-table-column>
+                <el-table-column prop="amount" label="账号余额"></el-table-column>
+                <el-table-column label="操作" width="160">
                    <template slot-scope="scope">
+                      <el-button
+                         size="mini"
+                         type="primary"
+                         @click="handleEdit(scope.row)">编辑</el-button>
                       <el-button
                         size="mini"
                         type="danger"
@@ -30,40 +43,26 @@
                 </el-pagination>
             </div>
         </div>
-
-        <!-- 添加类型 -->
-        <el-dialog title="添加类型" :visible.sync="editVisible" width="500px">
+        
+        <!-- 修改用户信息 -->
+        <el-dialog title="修改账号" :visible.sync="editVisible" width="500px">
             <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="类型名称">
+                <el-form-item label="账号名称">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-            </el-form>
-            <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="价格">
-                    <el-input v-model="form.link"></el-input>
+                <el-form-item label="邮箱">
+                    <el-input v-model="form.email"></el-input>
+                </el-form-item>
+                 <el-form-item label="金额">
+                    <el-input v-model="form.amount"></el-input>
+                </el-form-item>
+                 <el-form-item label="密码">
+                    <el-input v-model="form.password"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-
-         <!-- 编辑类型 -->
-        <el-dialog title="添加类型" :visible.sync="editRoomVisible" width="500px">
-            <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="类型名称">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-            </el-form>
-            <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="价格">
-                    <el-input v-model="form.link"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editRoomVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="updateRegisterUserInfo">修改</el-button>
             </span>
         </el-dialog>
 
@@ -71,38 +70,30 @@
 </template>
 
 <script>
-    import {  } from '@/service/index'
+    import { apiUserList,apiUpdeteRegisterInfo, apiDeleteRegisterInfo } from '@/service/index'
+    import { formatTimeString } from '@/config/utils'
     export default {
         data() {
             return {
-                fileList: [],
                 tableData: [],
                 cur_page: 1,
-                pageSize: 5,
+                pageSize: 10,
                 total: 0,
-                select_cate: '',
-                select_word: '',
                 is_search: false,
                 editVisible: false,
-                editRoomVisible: false,
                 form: {
-                    name: '',
-                    link: '',
-                    date: '',
-                    address: ''
+                  name: '',
+                  email: '',
+                  amount: 0,
+                  password: ''
                 },
+                name: '',
+                date: [],
                 deleteId: ''
             }
         },
         created() {
             this.getData();
-        },
-        computed: {
-           token(){
-             return {
-               Authorization: `bearer ${localStorage.getItem('admin-token')}`
-             }
-           }
         },
         methods: {
             // 分页导航
@@ -110,32 +101,85 @@
                 this.cur_page = val;
                 this.getData();
             },
-            handleRemoveMain(file, fileList) {
-                this.fileList = fileList
-            },
-            handleChangeMain(file, fileList){
-              this.fileList = fileList
-            },
-            checkImage(url){
-              window.open(url)
-            },
             getData() {
-              
+              let startTime = ''
+              let endTime = ''
+              if(this.date && this.date.length){
+                startTime = this.date[0]
+                endTime = this.date[1]
+              }
+              apiUserList({
+                pageNum: this.cur_page,
+                pageSize: this.pageSize,
+                startTime: startTime,
+                endTime: endTime,
+                name: this.name
+              })
+              .then((res) => {
+                if(res.code == 200){
+                  this.total = res.data.total
+                  this.tableData = res.data.list
+                  this.tableData.forEach(function(item){
+                    item.createTime = formatTimeString(item.createTime)
+                    switch (item.type) {
+                      case 0:
+                        item.typeValue = '账号'
+                        break;
+                      case 1:
+                        item.typeValue = 'QQ登录'
+                        break;
+                      default:
+                        item.typeValue = '微信登录'
+                        break;
+                    }
+                  })
+                }
+              })
             },
-            handleEdit(){
-              
+            handleEdit(row){
+              this.editVisible = true
+              this.form = row
+            },
+            updateRegisterUserInfo() {
+              apiUpdeteRegisterInfo({
+                email: this.form.email,
+                id: this.form.id,
+                name: this.form.name,
+                amount: this.form.amount,
+                password: this.form.password
+              })
+              .then((res) => {
+                if(res.code == 200){
+                  this.editVisible = false
+                  this.$message.success('修改成功')
+                  this.getData()
+                }
+              })
             },
             handleDelete(row){
-              
-            },
-            addSchool(){
-              this.editVisible = true
-              this.form.name = ''
-              this.form.link = ''
-              this.fileList = []
-            },
-            search() {
-                this.is_search = true;
+              this.$confirm('确定删除当前注册用户?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                apiDeleteRegisterInfo({
+                  id: row.id
+                })
+                .then((res) => {
+                  if(res.code == 200){
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    });
+                    this.getData()
+                  }
+                })
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });          
+              });
             },
             // 保存图文
             saveEdit() {

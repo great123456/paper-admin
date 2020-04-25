@@ -12,10 +12,17 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/admin':{
-          target:'http://47.102.117.36/admin',
+          target:'http://lunwentest.net/admin',
           changeOrigin:true,
           pathRewrite:{
               '/admin':''
+          }
+      },
+      '/common':{
+          target:'http://lunwentest.net/common',
+          changeOrigin:true,
+          pathRewrite:{
+              '/common':''
           }
       },
       '/ms':{
@@ -59,7 +66,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+    assetsPublicPath: '/paper-admin/',
 
     /**
      * Source Maps

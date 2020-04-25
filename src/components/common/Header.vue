@@ -32,24 +32,25 @@
         <el-dialog title="修改密码" :visible.sync="updateDialog" width="500px">
             <el-form ref="form" :model="form" label-width="80px">
                 <el-form-item label="原密码">
-                    <el-input v-model="form.password"></el-input>
+                    <el-input type="password" v-model="form.password"></el-input>
                 </el-form-item>
                 <el-form-item label="新密码">
-                    <el-input v-model="form.password"></el-input>
+                    <el-input type="password" v-model="form.newPassword"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码">
-                    <el-input v-model="form.password"></el-input>
+                    <el-input type="password" v-model="form.confirmPassword"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="updateDialog = false">取 消</el-button>
-                <el-button type="primary">修改</el-button>
+                <el-button type="primary" @click="updateUserPassword">修改</el-button>
             </span>
         </el-dialog>
 
     </div>
 </template>
 <script>
+    import { apiUserLoginOut,apiUserUpdatePassword, apiGetUserInfo } from '@/service/index'
     import bus from '../common/bus';
     export default {
         data() {
@@ -61,23 +62,54 @@
                 username: 'admin',
                 updateDialog: false,
                 form: {
-                  password: ''
+                  password: '',
+                  newPassword: '',
+                  confirmPassword: ''
                 }
             }
         },
-        computed:{
-
+        mounted(){
+          this.getUserMessage()
         },
         methods:{
+            getUserMessage() {
+              apiGetUserInfo()
+              .then((res) => {
+                if(res.code == 200){
+                  this.username = res.data.name
+                }
+              })
+            },
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if(command == 'loginout'){
-                    localStorage.removeItem('ms_username')
-                    this.$router.push('/login');
+                    apiUserLoginOut()
+                    .then((res) => {
+                      if(res.code == 200){
+                        localStorage.removeItem('ms_username')
+                        this.$router.push('/login');
+                      }
+                    })
                 }
                 if(command == 'update'){
                    this.updateDialog = true
                 }
+            },
+            updateUserPassword() {
+              if(this.form.confirmPassword !== this.form.newPassword){
+                this.$message.error('密码不一致')
+                return
+              }
+              apiUserUpdatePassword({
+                oldPassword: this.form.password,
+                newPassword: this.form.newPassword
+              })
+              .then((res) => {
+                if(res.code == 200){
+                  this.updateDialog = false;
+                  this.$message.success('修改成功');
+                }
+              })
             },
             // 侧边栏折叠
             collapseChage(){

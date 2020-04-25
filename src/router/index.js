@@ -4,6 +4,7 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 export default new Router({
+    base: '/paper-admin/',
     mode: 'history',
     routes: [
         {
@@ -62,7 +63,7 @@ export default new Router({
                     //论文监测
                     path: '/submit',
                     component: resolve => require(['../pages/submit.vue'], resolve),
-                    meta: { title: '论文监测' }
+                    meta: { title: '论文检测' }
                 }
             ]
         },
