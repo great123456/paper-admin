@@ -9,13 +9,14 @@
         <div class="container">
             <div class="handle-box">
               <el-input v-model="search" placeholder="请输入关键词查询" style="width:200px;"></el-input>
-              <el-button type="primary" plain>搜索</el-button>
+              <el-button type="primary" plain @click="handleSearch">搜索</el-button>
             </div>
             <el-table :data="tableData" border style="width: 100%" ref="multipleTable">
-                <el-table-column prop="name" label="订单日期"></el-table-column>
+                <el-table-column prop="createTime" label="订单日期"></el-table-column>
+                <el-table-column prop="orderCode" label="订单号"></el-table-column>
                 <el-table-column prop="name" label="用户名"></el-table-column>
-                <el-table-column prop="name" label="订单金额"></el-table-column>
-                <el-table-column prop="name" label="充值方式"></el-table-column>
+                <el-table-column prop="amount" label="订单金额"></el-table-column>
+                <el-table-column prop="payType" label="充值方式"></el-table-column>
                <!--  <el-table-column label="操作">
                    <template slot-scope="scope">
                       <el-button
@@ -36,7 +37,7 @@
 </template>
 
 <script>
-    import {  } from '@/service/index'
+    import { apiRechargeOrder } from '@/service/index'
     export default {
         data() {
             return {
@@ -62,13 +63,40 @@
             this.getData();
         },
         methods: {
+            handleSearch() {
+              this.cur_page = 1
+              this.getData()
+            },
             // 分页导航
             handleCurrentChange(val) {
                 this.cur_page = val;
                 this.getData();
             },
             getData() {
-              
+              apiRechargeOrder({
+                name: this.search,
+                pageNum: this.cur_page,
+                pageSize: this.pageSize
+              })
+              .then((res) => {
+                if(res.code == 200) {
+                  this.tableData = res.data.list
+                  this.total = res.data.total
+                  this.tableData.forEach((item) => {
+                    switch (item.payMethod) {
+                      case 1:
+                        item.payType = '支付宝'
+                        break;
+                      case 2:
+                        item.payType = '微信'
+                        break;
+                      case 3:
+                        item.payType = '淘宝网'
+                        break;
+                    }
+                  })
+                }
+              })
             },
             addSchool(){
               this.editVisible = true

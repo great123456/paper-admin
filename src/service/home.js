@@ -61,3 +61,7 @@ export const apiPriceRecordList = (obj) => fetch(API_PATH + '/price/priceChangeL
 
 // 所有论文类型
 export const apiPaperTypeList = (obj) => fetch('/common/paperTypeList', obj, 'GET')
+
+// 充值订单
+export const apiRechargeOrder = (obj) => fetch('/chargeOrder/chargeLog', obj, 'GET')
+
