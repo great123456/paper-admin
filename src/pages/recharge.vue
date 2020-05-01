@@ -38,6 +38,7 @@
 
 <script>
     import { apiRechargeOrder } from '@/service/index'
+    import { formatTimeString } from '@/config/utils'
     export default {
         data() {
             return {
@@ -83,6 +84,7 @@
                   this.tableData = res.data.list
                   this.total = res.data.total
                   this.tableData.forEach((item) => {
+                    item.createTime = formatTimeString(item.createTime)
                     switch (item.payMethod) {
                       case 1:
                         item.payType = '支付宝'
