@@ -173,13 +173,13 @@
                 // loading.close()
                 console.log(response)
                 let headers = response.headers
-                let fileName = headers['content-disposition'].split('=')[1]
-                fileName = decodeURIComponent(fileName)
+                // let fileName = headers['content-disposition'].split('=')[1]
+                // fileName = decodeURIComponent(fileName)
                 let dowloadUrl = window.URL.createObjectURL(new Blob([response.data]))
                 let link = document.createElement('a')
                 link.style.display = 'none'
                 link.href = dowloadUrl
-                link.setAttribute('download', fileName)
+                link.setAttribute('download', '论文检测报告.zip')
                 document.body.appendChild(link)
                 link.click()
               })
@@ -187,6 +187,8 @@
                 console.log(error)
                 this.$message('论文正在排队检测中。')
               })
+              // const url = 'http://api.kuailelunwen.com/down_report?paper_id=8674021&tid=1588263968347'
+              // window.open(url, '_blank')
             },
             handleDelete(row) {
               this.$confirm('是否确定删除当前订单?', '提示', {
