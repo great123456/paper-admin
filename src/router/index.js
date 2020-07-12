@@ -64,6 +64,21 @@ export default new Router({
                     path: '/submit',
                     component: resolve => require(['../pages/submit.vue'], resolve),
                     meta: { title: '论文检测' }
+                }, {
+                    // banner管理
+                    path: '/banner',
+                    component: resolve => require(['../pages/banner.vue'], resolve),
+                    meta: { title: 'banner管理' }
+                }, {
+                    // 论文降重图标和文本设置
+                    path: '/setting',
+                    component: resolve => require(['../pages/setting.vue'], resolve),
+                    meta: { title: '论文降重图标和文本设置' }
+                }, {
+                    // 常见问题设置
+                    path: '/question',
+                    component: resolve => require(['../pages/question.vue'], resolve),
+                    meta: { title: '常见问题设置' }
                 }
             ]
         },

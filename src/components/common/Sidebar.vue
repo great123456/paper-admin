@@ -61,6 +61,21 @@
                         title: '用户管理'
                     },
                     {
+                        icon: 'el-icon-picture',
+                        index: 'banner',
+                        title: 'banner管理'
+                    },
+                    {
+                        icon: 'el-icon-setting',
+                        index: 'setting',
+                        title: '论文降重设置'
+                    },
+                    {
+                        icon: 'el-icon-question',
+                        index: 'question',
+                        title: '常见问题设置'
+                    },
+                    {
                         icon: 'el-icon-goods',
                         index: 'account',
                         title: '账号管理'
